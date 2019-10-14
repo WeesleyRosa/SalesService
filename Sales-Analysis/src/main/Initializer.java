@@ -10,39 +10,32 @@ import util.MyFileHandler;
 
 public class Initializer {
 
-	private static boolean LOOPER = true;
-
-	public static void main(String[] args) throws InterruptedException, FileNotFoundException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		MyFileHandler handler = new MyFileHandler();
-		
-		try (FileReader reader = new FileReader("filename.txt");
-	             BufferedReader br = new BufferedReader(reader)) {
 
-	            
-	            String line;
-	            while ((line = br.readLine()) != null) {
-	                System.out.println(line);
-	            }
+		String directory = System.getProperty("user.home");
+		String fileName = "data.dat";
+		String absolutePath = directory + File.separator + fileName;
+		System.out.println(absolutePath);
 
-	        } catch (IOException e) {
-	            System.err.format("IOException: %s%n", e);
-	        }
+		// read the content from file
+		try (FileReader fileReader = new FileReader(absolutePath)) {
+			BufferedReader br = new BufferedReader(fileReader);
+			handler.processFiles(br, absolutePath);
 
-		//while (LOOPER) {
-//			String homePathEnv = System.getenv("HOMEPATH");
-//			System.out.println(homePathEnv);
-//			String homePath = homePathEnv + "/data/in";
-//			File folder = new File("homePath");
-//			System.out.println(folder.getAbsolutePath());
-//			System.out.println(System.getProperty("user.home") + "/data/in");
-//			String currentUsersHomeDir = System.getProperty("user.home");
-//			System.out.println(currentUsersHomeDir);
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+		}
 
-//			File[] listOfFiles = folder.listFiles();
-//			handler.processFiles(listOfFiles);
-
-			//Thread.sleep(7000);
-		//}
+		try (FileReader fileReader = new FileReader(absolutePath)) {
+			int ch = fileReader.read();
+			while (ch != -1) {
+				System.out.print((char) ch);
+				ch = fileReader.read();
+			}
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+		}
 
 	}
 

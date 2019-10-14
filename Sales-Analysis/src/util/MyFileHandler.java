@@ -1,10 +1,11 @@
 package util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import model.Customer;
 import model.Sales;
@@ -18,28 +19,24 @@ public class MyFileHandler {
 	private Salesman worstSalesman = null;
 	private Sales expansiveSale = null;
 
-	public void processFiles(File[] files) throws FileNotFoundException {
-		int i = 0;
-		while (i != files.length - 1) {
-			Scanner scanner = new Scanner(files[i]);
-			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-				String[] parsedLine = line.split("ç");
-				if (parsedLine[0].equals("001")) {
-					salesman.add(EntitysController.createSalesman(parsedLine));
-				}
+	public void processFiles(BufferedReader br, String absolutePath) throws IOException {
 
-				else if (parsedLine[0].equals("002")) {
-					customer.add(EntitysController.createCustomer(parsedLine));
-				}
-
-				else if (parsedLine[0].equals("003")) {
-					sales.add(EntitysController.createSales(parsedLine));
-				}
-
+		for (String line = br.readLine(); line != null; line = br.readLine()) {
+			String[] parsedLine = line.split("ç");
+			if (parsedLine[0].equals("001")) {
+				salesman.add(EntitysController.createSalesman(parsedLine));
 			}
-			scanner.close();
+
+			else if (parsedLine[0].equals("002")) {
+				customer.add(EntitysController.createCustomer(parsedLine));
+			}
+
+			else if (parsedLine[0].equals("003")) {
+				sales.add(EntitysController.createSales(parsedLine));
+			}
 		}
+
+		createFile(absolutePath);
 
 	}
 
